@@ -673,6 +673,15 @@ void mp_decode_to_lua_type(lua_State *L, mp_cur *c) {
         lua_pushboolean(L,0);
         mp_cur_consume(c,1);
         break;
+    case 0xc4:  /* bin 8 */
+        mp_cur_need(c,2);
+        {
+            size_t l = c->p[1];
+            mp_cur_need(c,2+l);
+            lua_pushlstring(L,(char*)c->p+2,l);
+            mp_cur_consume(c,2+l);
+        }
+        break;
     case 0xca:  /* float */
         mp_cur_need(c,5);
         assert(sizeof(float) == 4);
